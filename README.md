@@ -1,20 +1,20 @@
-# gRPC interceptor for Stackdriver Trace (Google Cloud) 
+# Google Cloud Trace intercept for gRPC 
 
 Pass google trace context in remote procedure calls. This allows parent-child tracing across multiple services.
 
 ## Client
 
-Use the `interceptor.Client` to add google trace context to outgoing RPC calls
+Use the `intercept.ClientTrace` to add google trace context to outgoing RPC calls
 made by the gRPC client.
 
 ```go
-import "github.com/harlow/grpc-google-cloud-trace/interceptor"
+import "github.com/harlow/grpc-google-cloud-trace/intercept"
 
 func main() {
 	conn, err := grpc.Dial(
 		address, 
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(interceptor.Client(traceClient)),
+		grpc.WithUnaryInterceptor(intercept.ClientTrace(traceClient)),
 	)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -27,17 +27,17 @@ func main() {
 
 ## Server
 
-Use the `interceptor.Server` to parse the google cloud context from the request
+Use the `intercept.ServerTrace` to parse the google cloud context from the request
 metadata. The interceptor will set up a new child span of the requesting party.
 
 ```go
-import "github.com/harlow/grpc-google-cloud-trace/interceptor"
+import "github.com/harlow/grpc-google-cloud-trace/intercept"
 
 func main() {
 	// ...
 	
 	grpcServer := grpc.NewServer(
-	  grpc.UnaryInterceptor(interceptor.Server(traceClient)),
+	  grpc.UnaryInterceptor(intercept.ServerTrace(traceClient)),
   	)
  	pb.RegisterRouteGuideServer(grpcServer, newServer())
 	grpcServer.Serve(lis)
