@@ -1,6 +1,6 @@
 # gRPC interceptor for Stackdriver Trace (Google Cloud) 
 
-Pass google trace context header in remote prodecure calls. This allows parent-child tracing across multiple services.
+Pass google trace context in remote procedure calls. This allows parent-child tracing across multiple services.
 
 ## Client
 
