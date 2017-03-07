@@ -54,3 +54,10 @@ func getNearbyPoints(ctx context.Context, lat, lon float64) []geo.Point {
 	// ...
 }
 ```
+
+## Credits
+
+This codebase was heavily inspired by the following issues and repositories:
+
+* [Support client side interceptor](https://github.com/grpc/grpc-go/pull/867)
+* [OpenTracing support for gRPC in Go](https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc)
