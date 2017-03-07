@@ -8,16 +8,26 @@ Use the `intercept.ClientTrace` to add google trace context to outgoing RPC call
 made by the gRPC client.
 
 ```go
-import "github.com/harlow/grpc-google-cloud-trace/intercept"
+import(
+	"cloud.google.com/go/trace"
+	"github.com/harlow/grpc-google-cloud-trace/intercept"
+)   
 
 func main() {
+	// ...
+	
+	traceClient, err := trace.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("trace client error: %v", err)
+	}
+	
 	conn, err := grpc.Dial(
 		address, 
 		grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(intercept.ClientTrace(traceClient)),
 	)
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("grpc dial error: %v", err)
 	}
 	defer conn.Close()
 	
@@ -31,10 +41,18 @@ Use the `intercept.ServerTrace` to parse the google cloud context from the reque
 metadata. The interceptor will set up a new child span of the requesting party.
 
 ```go
-import "github.com/harlow/grpc-google-cloud-trace/intercept"
+import(
+	"cloud.google.com/go/trace"
+	"github.com/harlow/grpc-google-cloud-trace/intercept"
+)   
 
 func main() {
 	// ...
+	
+	traceClient, err := trace.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("trace client error: %v", err)
+	}
 	
 	grpcServer := grpc.NewServer(
 	  grpc.UnaryInterceptor(intercept.ServerTrace(traceClient)),
