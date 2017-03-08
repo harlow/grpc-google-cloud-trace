@@ -2,7 +2,26 @@
 
 Pass google trace context in remote procedure calls. This allows parent-child tracing across multiple services.
 
-## Client
+Note: There is currently support in the `gRPC` package for tracing client requests:
+https://github.com/GoogleCloudPlatform/google-cloud-go/blob/master/trace/trace.go#L242-L265
+
+It can be used like this when creating trace client:
+
+```go
+traceClient, err := trace.NewClient(ctx, projectID, trace.EnableGRPCTracing)
+```
+
+And also added to the Dial options: 
+
+```go
+conn, err := grpc.Dial(addr, trace.EnableGRPCTracingDialOption)
+```
+
+However, this only seems to trace the outgoing requests and won't help with stitching together the parent-child spans across service boundries.
+
+## Usage
+
+### Client
 
 Use the `intercept.ClientTrace` to add google trace context to outgoing RPC calls
 made by the gRPC client.
@@ -35,7 +54,7 @@ func main() {
 }
 ```
 
-## Server
+### Server
 
 Use the `intercept.ServerTrace` to parse the google cloud context from the request
 metadata. The interceptor will set up a new child span of the requesting party.
