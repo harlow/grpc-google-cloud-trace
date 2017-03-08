@@ -1,4 +1,4 @@
-# Google Cloud Trace intercept for gRPC 
+# Google Cloud Trace intercept for gRPC
 
 Pass google trace context in remote procedure calls. This allows parent-child tracing across multiple services.
 
@@ -15,14 +15,14 @@ import "github.com/harlow/grpc-google-cloud-trace/intercept"
 func main() {
 	// add tracing option to dial
 	conn, err := grpc.Dial(
-		address, 
+		address,
 		intercept.EnableGRPCTracingDialOption,
 	)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	
+
 	// ...
 }
 ```
@@ -52,7 +52,7 @@ Create new child spans from the request context:
 func getNearbyPoints(ctx context.Context, lat, lon float64) []geo.Point {
 	span := trace.FromContext(ctx).NewChild("getNearbyPoints")
 	defer span.Finish()
-	
+
 	// ...
 }
 ```
